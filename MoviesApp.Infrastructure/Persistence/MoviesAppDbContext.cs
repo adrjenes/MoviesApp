@@ -10,7 +10,7 @@ public class MoviesAppDbContext : DbContext
     public DbSet<Movie> Movies => Set<Movie>();
     public DbSet<StreamingSite> StreamingSites => Set<StreamingSite>();
     public DbSet<MovieStreamingSite> MovieStreamingSites => Set<MovieStreamingSite>();
-
+    public DbSet<User> Users => Set<User>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Movie>()
@@ -30,5 +30,9 @@ public class MoviesAppDbContext : DbContext
             .HasOne(ms => ms.StreamingSite)
             .WithMany(s => s.MovieStreamingSites)
             .HasForeignKey(ms => ms.StreamingSiteId);
+
+        modelBuilder.Entity<User>()
+        .HasIndex(x => x.Username)
+        .IsUnique();
     }
 }

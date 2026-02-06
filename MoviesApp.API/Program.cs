@@ -1,12 +1,17 @@
 using MoviesApp.Infrastructure.Extensions;
 using MoviesApp.Infrastructure.Seeders;
+using MoviesApp.Application.Extensions;
+using MoviesApp.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
@@ -22,6 +27,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -79,6 +79,20 @@ internal sealed class MoviesAppSeeder(MoviesAppDbContext dbContext) : IMoviesApp
             new MovieStreamingSite { Movie = movie3, StreamingSite = netflix }
         );
 
+        if (!await dbContext.Users.AnyAsync())
+        {
+            dbContext.Users.AddRange(
+                new User
+                {
+                    Username = "rekruter",
+                    Email = "rekrutacja@gmail.com",
+                    Password = BCrypt.Net.BCrypt.HashPassword("Rekruter123!@")
+                }
+            );
+
+            await dbContext.SaveChangesAsync();
+        }
+
         await dbContext.SaveChangesAsync();
     }
 }
