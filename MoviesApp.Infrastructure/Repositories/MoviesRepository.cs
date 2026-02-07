@@ -10,10 +10,18 @@ internal class MoviesRepository(MoviesAppDbContext dbContext) : IMoviesRepositor
     public async Task<IEnumerable<Movie>> GetAllAsync()
     {
         return await dbContext.Movies
-        .AsNoTracking()
-        .Include(m => m.MovieStreamingSites)
+            .AsNoTracking()
+            .Include(m => m.MovieStreamingSites)
             .ThenInclude(ms => ms.StreamingSite)
-        .ToListAsync();
+            .ToListAsync();
+    }
+    public async Task<Movie?> GetByIdAsync(int id)
+    {
+        return await dbContext.Movies
+            .AsNoTracking()
+            .Include(m => m.MovieStreamingSites)
+            .ThenInclude(ms => ms.StreamingSite)
+            .FirstOrDefaultAsync(m => m.Id == id);
     }
     public async Task<int> Create(Movie entity)
     {
@@ -21,4 +29,5 @@ internal class MoviesRepository(MoviesAppDbContext dbContext) : IMoviesRepositor
         await dbContext.SaveChangesAsync();
         return entity.Id;
     }
+
 }

@@ -4,7 +4,7 @@ using MoviesApp.Domain.IRepositories;
 
 namespace MoviesApp.Application.Movies.Commands.CreateMovie;
 
-public sealed class CreateMovieCommandHandler(IMoviesRepository repo) : IRequestHandler<CreateMovieCommand, int>
+public class CreateMovieCommandHandler(IMoviesRepository repo) : IRequestHandler<CreateMovieCommand, int>
 {
     public async Task<int> Handle(CreateMovieCommand request, CancellationToken ct)
     {
