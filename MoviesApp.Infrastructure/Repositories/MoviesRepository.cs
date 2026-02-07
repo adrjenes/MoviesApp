@@ -15,4 +15,10 @@ internal class MoviesRepository(MoviesAppDbContext dbContext) : IMoviesRepositor
             .ThenInclude(ms => ms.StreamingSite)
         .ToListAsync();
     }
+    public async Task<int> Create(Movie entity)
+    {
+        dbContext.Movies.Add(entity);
+        await dbContext.SaveChangesAsync();
+        return entity.Id;
+    }
 }
