@@ -1,7 +1,7 @@
 using MoviesApp.Infrastructure.Extensions;
 using MoviesApp.Infrastructure.Seeders;
 using MoviesApp.Application.Extensions;
-using MoviesApp.API.Services;
+using MoviesApp.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

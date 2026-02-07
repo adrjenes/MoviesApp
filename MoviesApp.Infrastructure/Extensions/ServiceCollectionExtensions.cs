@@ -18,5 +18,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMoviesAppSeeder, MoviesAppSeeder>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IMoviesRepository, MoviesRepository>();
     }
 }

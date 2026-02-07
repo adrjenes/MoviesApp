@@ -5,8 +5,8 @@ using MoviesApp.Infrastructure.Persistence;
 
 namespace MoviesApp.Infrastructure.Repositories;
 
-internal class UserRepository(MoviesAppDbContext db) : IUserRepository
+internal class UserRepository(MoviesAppDbContext dbContext) : IUserRepository
 {
     public Task<User?> GetByUsernameAsync(string username, CancellationToken ct) 
-        => db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == username, ct);
+        => dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == username, ct);
 }
