@@ -29,5 +29,15 @@ internal class MoviesRepository(MoviesAppDbContext dbContext) : IMoviesRepositor
         await dbContext.SaveChangesAsync();
         return entity.Id;
     }
+    public async Task<Movie?> GetByIdForUpdateAsync(int id)
+    {
+        return await dbContext.Movies
+            .Include(m => m.MovieStreamingSites)
+            .FirstOrDefaultAsync(m => m.Id == id);
+    }
 
+    public async Task SaveChangesAsync()
+    {
+        await dbContext.SaveChangesAsync();
+    }
 }

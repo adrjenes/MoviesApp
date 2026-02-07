@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MoviesApp.Application.Movies.Commands.CreateMovie;
+using MoviesApp.Application.Movies.Commands.UpdateMovie;
 using MoviesApp.Application.Movies.Dtos;
 using MoviesApp.Application.Movies.Queries.GetAllMovies;
 using MoviesApp.Application.Movies.Queries.GetMovieById;
@@ -29,5 +30,12 @@ public class MoviesController(IMediator mediator) : ControllerBase
         var id = await mediator.Send(new CreateMovieCommand(dto));
         return Ok(new { id });
     }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateMovieCommand command)
+    {
+        command.Id = id;
 
+        var ok = await mediator.Send(command);
+        return ok ? NoContent() : NotFound();
+    }
 }
