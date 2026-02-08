@@ -36,3 +36,5 @@ export type MovieDetails = {
   streamingSiteIds: number[];
 };
 
+export type CreateMoviePayload = Omit<MovieDetails, "id">;
+export type UpdateMoviePayload = Omit<MovieDetails, "id">; 

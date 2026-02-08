@@ -1,90 +1,215 @@
 import { useState } from "react";
 import { http } from "../../api/http";
-
-import { useStreamingSites } from "./useStreamingSites";
 import StreamingSitesPicker from "./StreamingSitesPicker";
+import { useStreamingSites } from "./useStreamingSite";
+import type { CreateMoviePayload } from "../../types/types";
+import { toNullIfEmpty, dateInputToIso } from "../../utils/movieForm.utils";
+import Input from "../../components/UI/Input";
+import Textarea from "../../components/UI/Textarea";
+import Checkbox from "../../components/UI/Checkbox";
+import Button from "../../components/UI/Button";
+
+const emptyMovie = (): CreateMoviePayload => ({
+  name: "",
+  originalTitle: null,
+  description: null,
+  score: 8,
+  releaseDate: new Date().toISOString().slice(0, 10),
+  durationMinutes: 120,
+  genre: null,
+  director: null,
+  language: null,
+  country: null,
+  ageRating: null,
+  posterUrl: null,
+  isAvailable: true,
+  streamingSiteIds: [],
+});
 
 export default function AddMovieForm({ onCreated }: { onCreated: () => void }) {
   const sites = useStreamingSites();
+  const [movie, setMovie] = useState<CreateMoviePayload>(() => emptyMovie());
 
-  const [name, setName] = useState("");
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [posterFile, setPosterFile] = useState<File | null>(null);
+  const canSave = !!movie.name.trim();
 
-  const canSave = name.trim().length > 0;
+  const setField = (key: keyof CreateMoviePayload, value: any) => {
+    setMovie((m) => ({ ...m, [key]: value }));
+  };
 
   const toggleSite = (id: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+    setMovie((m) => ({
+      ...m,
+      streamingSiteIds: m.streamingSiteIds.includes(id)
+        ? m.streamingSiteIds.filter((x) => x !== id)
+        : [...m.streamingSiteIds, id],
+    }));
   };
 
   const save = async () => {
     if (!canSave) return;
 
-    const form = new FormData();
-
-    form.append("name", name.trim());
-    form.append("originalTitle", "");
-    form.append("description", "");
-    form.append("score", "8");
-    form.append("releaseDate", new Date().toISOString());
-    form.append("durationMinutes", "120");
-    form.append("genre", "");
-    form.append("director", "");
-    form.append("language", "");
-    form.append("country", "");
-    form.append("ageRating", "");
-    form.append("isAvailable", "true");
-
-    selectedIds.forEach((id) =>
-      form.append("streamingSiteIds", String(id))
-    );
-
-    if (posterFile) {
-      form.append("poster", posterFile);
-    }
-
-    await http.post("/api/movies", form, {
-      headers: { "Content-Type": "multipart/form-data" },
+    await http.post("/api/movies", {
+      ...movie,
+      name: movie.name.trim(),
+      releaseDate: dateInputToIso(movie.releaseDate),
+      streamingSiteIds: [...new Set(movie.streamingSiteIds)],
     });
 
-    setName("");
-    setSelectedIds([]);
-    setPosterFile(null);
+    setMovie(emptyMovie());
     onCreated();
   };
 
   return (
-    <div className="border p-4 rounded space-y-3">
-      <input
-        className="border w-full p-2 rounded"
-        placeholder="Movie name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+    <div>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+        <div>
+          <label className="text-sm">Nazwa filmu</label>
+          <Input
+            placeholder="Wprowadź"
+            value={movie.name}
+            onChange={(e) => setField("name", e.target.value)}
+          />
+        </div>
 
-      {/* UPLOAD PLAKATU */}
-      <input
-        type="file"
-        accept="image/png, image/jpeg, image/webp"
-        onChange={(e) => setPosterFile(e.target.files?.[0] ?? null)}
-        className="border w-full p-2 rounded"
-      />
+        <div>
+          <label className="text-sm">Oryginalna nazwa filmu</label>
+          <Input
+            placeholder="Wprowadź"
+            value={movie.originalTitle ?? ""}
+            onChange={(e) =>
+              setField("originalTitle", toNullIfEmpty(e.target.value))
+            }
+          />
+        </div>
 
-      <StreamingSitesPicker
-        sites={sites}
-        selectedIds={selectedIds}
-        onToggle={toggleSite}
-      />
+        <div>
+          <label className="text-sm">Reżyser</label>
+          <Input
+            placeholder="Wprowadź"
+            value={movie.director ?? ""}
+            onChange={(e) => setField("director", toNullIfEmpty(e.target.value))}
+          />
+        </div>
 
-      <button
-        className="bg-black text-white px-3 py-2 rounded disabled:opacity-60"
-        disabled={!canSave}
-        onClick={save}
-      >
-        Save
-      </button>
+        <div>
+          <label className="text-sm">Gatunek</label>
+          <Input
+            placeholder="Wprowadź"
+            value={movie.genre ?? ""}
+            onChange={(e) => setField("genre", toNullIfEmpty(e.target.value))}
+          />
+        </div>
+
+        <div>
+          <label className="text-sm">Język</label>
+          <Input
+            placeholder="Wprowadź"
+            value={movie.language ?? ""}
+            onChange={(e) => setField("language", toNullIfEmpty(e.target.value))}
+          />
+        </div>
+
+        <div>
+          <label className="text-sm">Kraj</label>
+          <Input
+            placeholder="Country"
+            value={movie.country ?? ""}
+            onChange={(e) => setField("country", toNullIfEmpty(e.target.value))}
+          />
+        </div>
+
+        <div>
+          <label className="text-sm">Kategoria wiekowa</label>
+          <Input
+            placeholder="Wprowadź"
+            value={movie.ageRating ?? ""}
+            onChange={(e) =>
+              setField("ageRating", toNullIfEmpty(e.target.value))
+            }
+          />
+        </div>
+
+        <div>
+          <label className="text-sm">Link do plakatu</label>
+          <Input
+            placeholder="Poster URL"
+            value={movie.posterUrl ?? ""}
+            onChange={(e) => setField("posterUrl", toNullIfEmpty(e.target.value))}
+          />
+        </div>
+
+        <div>
+          <label className="text-sm">Data premiery</label>
+          <Input
+            className="w-full rounded border p-2"
+            type="date"
+            value={movie.releaseDate}
+            onChange={(e) => setField("releaseDate", e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label className="text-sm">Czas trwania filmu (min.)</label>
+          <Input
+            className="w-full rounded border p-2"
+            type="number"
+            min={1}
+            value={movie.durationMinutes}
+            onChange={(e) =>
+              setField("durationMinutes", Number(e.target.value))
+            }
+          />
+        </div>
+
+        <div>
+          <label className="text-sm">Ocena (0-10)</label>
+          <Input
+            className="w-full rounded border p-2"
+            type="number"
+            min={0}
+            max={10}
+            step={0.1}
+            value={movie.score}
+            onChange={(e) => setField("score", Number(e.target.value))}
+          />
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <label className="text-sm">Opis filmu</label>
+        <Textarea
+          placeholder="Opis"
+          value={movie.description ?? ""}
+          onChange={(e) => setField("description", toNullIfEmpty(e.target.value))}
+        />
+      </div>
+
+      <div className="mt-1">
+        <label className="mb-2 block text-sm">Czy film jest dostępny?</label>
+        <Checkbox
+          className="block"
+          checked={movie.isAvailable}
+          onChange={(e) => setField("isAvailable", e.target.checked)}
+        />
+      </div>
+
+      <div className="mb-4">
+        <StreamingSitesPicker
+          sites={sites}
+          selectedIds={movie.streamingSiteIds}
+          onToggle={toggleSite}
+        />
+      </div>
+
+      <div className="flex justify-end">
+        <Button
+          className="rounded bg-black px-3 py-2 text-white disabled:opacity-60"
+          disabled={!canSave}
+          onClick={save}
+        >
+          Zapisz
+        </Button>
+      </div>
     </div>
   );
 }

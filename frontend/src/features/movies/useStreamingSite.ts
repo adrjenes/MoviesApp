@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { http } from "../../api/http";
 import type { StreamingSite } from "../../types/types";
 
+
 export function useStreamingSites() {
   const [sites, setSites] = useState<StreamingSite[]>([]);
 
