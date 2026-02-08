@@ -7,7 +7,7 @@ public class UpdateMovieCommandHandler(IMoviesRepository repo) : IRequestHandler
 {
     public async Task<bool> Handle(UpdateMovieCommand request, CancellationToken ct)
     {
-        var movie = await repo.GetByIdForUpdateAsync(request.Id);
+        var movie = await repo.GetByIdForUpdateAsync(request.Id, ct);
         if (movie is null) return false;
 
         movie.Name = request.Name;
@@ -37,7 +37,8 @@ public class UpdateMovieCommandHandler(IMoviesRepository repo) : IRequestHandler
                 StreamingSiteId = siteId
             });
         }
-        await repo.SaveChangesAsync();
+
+        await repo.SaveChangesAsync(ct);
         return true;
     }
 }

@@ -8,7 +8,7 @@ public class GetMovieByIdQueryHandler(IMoviesRepository repo) : IRequestHandler<
 {
     public async Task<MovieDetailsDto?> Handle(GetMovieByIdQuery request, CancellationToken ct)
     {
-        var m = await repo.GetByIdAsync(request.Id);
+        var m = await repo.GetByIdAsync(request.Id, ct);
         if (m is null) return null;
 
         return new MovieDetailsDto

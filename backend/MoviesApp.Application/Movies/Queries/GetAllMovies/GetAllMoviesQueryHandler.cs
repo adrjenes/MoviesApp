@@ -5,17 +5,17 @@ using MoviesApp.Domain.IRepositories;
 
 namespace MoviesApp.Application.Movies.Queries.GetAllMovies;
 
-public class GetAllMoviesQueryHandler(IMoviesRepository repo): IRequestHandler<GetAllMoviesQuery, List<MovieDto>>
+public class GetAllMoviesQueryHandler(IMoviesRepository repo) : IRequestHandler<GetAllMoviesQuery, List<MovieDto>>
 {
     public async Task<List<MovieDto>> Handle(GetAllMoviesQuery request, CancellationToken ct)
     {
-        var movies = await repo.GetAllAsync();
+        var movies = await repo.GetAllAsync(ct);
 
         return movies.Select(m => new MovieDto
         {
             Id = m.Id,
             Name = m.Name,
-            Description = m.Description, 
+            Description = m.Description,
             Score = m.Score,
             ReleaseDate = m.ReleaseDate,
             DurationMinutes = m.DurationMinutes,

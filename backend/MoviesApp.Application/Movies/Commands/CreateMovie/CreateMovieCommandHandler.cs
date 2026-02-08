@@ -36,7 +36,7 @@ public class CreateMovieCommandHandler(IMoviesRepository repo) : IRequestHandler
             });
         }
 
-        var id = await repo.Create(movie);
+        var id = await repo.Create(movie, ct);
         return id;
     }
 }
