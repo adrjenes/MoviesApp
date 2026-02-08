@@ -19,5 +19,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IMoviesRepository, MoviesRepository>();
+        services.AddScoped<IStreamingSitesRepository, StreamingSitesRepository>();
     }
 }

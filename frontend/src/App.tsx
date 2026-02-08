@@ -1,10 +1,24 @@
-function App() {
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from "./features/auth/LoginPage";
+import MoviesPage from "./features/movies/MoviesPage";
+import RequireAuth from "./components/RequireAuth";
 
+
+function App() {
   return (
-    <>
-    <h1 className="text-red-600">Siema</h1>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/movies" element={
+          <RequireAuth>
+            <MoviesPage />
+          </RequireAuth>
+        }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
