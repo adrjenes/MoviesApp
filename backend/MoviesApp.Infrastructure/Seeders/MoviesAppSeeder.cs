@@ -7,7 +7,8 @@ internal sealed class MoviesAppSeeder(MoviesAppDbContext dbContext) : IMoviesApp
 {
     public async Task Seed()
     {
-        if (!await dbContext.Database.CanConnectAsync()) return;
+        await dbContext.Database.MigrateAsync();
+
         if (await dbContext.MovieStreamingSites.AnyAsync()) return;
 
         var netflix = new StreamingSite { Name = "Netflix" };
