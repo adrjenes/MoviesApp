@@ -61,7 +61,7 @@ export default function EditMovieForm({
     }
   };
 
-  if (!movie) return <div>Loading...</div>;
+  if (!movie) return <div>Ładowanie...</div>;
 
 return (
   <div className="">

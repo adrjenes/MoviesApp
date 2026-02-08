@@ -34,7 +34,6 @@ export default function MoviesPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* HEADER */}
       <header className="sticky top-0 z-10 bg-[rgb(38,34,98)] text-white shadow">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
@@ -50,15 +49,11 @@ export default function MoviesPage() {
         </div>
       </header>
 
-      {/* CONTENT */}
       <main className="mx-auto max-w-5xl px-4 py-6">
         <div className="mb-4 flex items-end justify-between gap-3">
           <h1 className="text-2xl font-bold text-slate-900">Zarządzaj listą filmów</h1>
-
-       
         </div>
 
-        {/* LIST */}
         {loading && (
           <div className="rounded-xl border bg-white p-4 text-slate-700 shadow-sm">
             Ładowanie filmów...
@@ -80,7 +75,6 @@ export default function MoviesPage() {
                 onClick={() => setEditId(m.id)}
                 className="w-full rounded-2xl border bg-white p-4 text-left shadow-sm transition hover:-translate-y-[1px] hover:shadow-[0_0_0_3px_rgba(242,91,44,0.35)] "
               >
-                {/* TOP LINE */}
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="text-lg font-extrabold text-[rgb(38,34,98)]">
                     {m.name}
@@ -105,9 +99,7 @@ export default function MoviesPage() {
                   </div>
                 </div>
 
-                {/* BODY: 2 columns */}
                 <div className="mt-3 grid gap-4 md:grid-cols-[1fr_1.4fr]">
-                  {/* LEFT (meta) */}
                   <div className="rounded-xl bg-slate-50 p-3">
                     <div className="text-sm">
                       <div className="flex gap-2">
@@ -141,7 +133,6 @@ export default function MoviesPage() {
                     </div>
                   </div>
 
-                  {/* RIGHT (description) */}
                   <div className="rounded-xl border border-slate-200 p-3">
                     <div className="mb-1 text-xs font-bold uppercase tracking-wide">
                       Opis
@@ -161,14 +152,13 @@ export default function MoviesPage() {
         )}
       </main>
 
-      {/* MODALS */}
       <Modal open={addOpen} title="Dodaj film" onClose={() => setAddOpen(false)}>
         <AddMovieForm onCreated={afterChange} />
       </Modal>
 
       <Modal
         open={editId !== null}
-        title="Edit Movie"
+        title="Edytuj film"
         onClose={() => setEditId(null)}
       >
         {editId !== null && (
